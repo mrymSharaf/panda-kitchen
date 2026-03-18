@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    public float speed = 3.5f;
+    public float speed = 4f;
     public float rotationSpeed = 10f;
     public GameObject heldFoodVisual;
 

@@ -7,7 +7,7 @@ public class CustomerSpawner : MonoBehaviour
     public SeatPoint[] seats;
     public Transform exitPoint;
     public Transform spawnPoint;
-    public float spawnInterval = 8f;
+    public float spawnInterval = 5f;
 
     float timer;
 
