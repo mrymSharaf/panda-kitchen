@@ -1,4 +1,4 @@
-# panda-kitchen
+# Panda Kitchen
 Welcome to the **Panda kitchen!** its a high-speed 3D restaurant management game where you play as a master Panda chef serving the stealthiest (and hungriest) customers in the world: **Ninjas**.
 
 ## How to Play
@@ -16,13 +16,13 @@ Welcome to the **Panda kitchen!** its a high-speed 3D restaurant management game
 | **Interact / Cook / Serve** | **[E]** |
 
 ## Assets
-[Animations](https://www.mixamo.com/#/) 
-[Panda Assets](https://quaternius.com/packs/sushirestaurantkit.html)
-[Ninja Character](https://quaternius.com/packs/ultimatemonsters.html)
-[Additional Assets](https://quaternius.com/packs/modularplatformer.html)
+- [Animations](https://www.mixamo.com/#/) 
+- [Panda Assets](https://quaternius.com/packs/sushirestaurantkit.html)
+- [Ninja Character](https://quaternius.com/packs/ultimatemonsters.html)
+- [Additional Assets](https://quaternius.com/packs/modularplatformer.html)
 
 ## Tutorials
-[Instruction Book](https://youtu.be/peJ22VmW7QQ?si=dNLiGPH1mdHe7OJ4)
-[Animators](https://youtu.be/vApG8aYD5aI?si=tHpMso0fYYqpMA-y)
-[Spawning](https://youtu.be/aBzpvUXibw0?si=_kfago8HM5JOxdKt)
+- [Instruction Book](https://youtu.be/peJ22VmW7QQ?si=dNLiGPH1mdHe7OJ4)
+- [Animators](https://youtu.be/vApG8aYD5aI?si=tHpMso0fYYqpMA-y)
+- [Spawning](https://youtu.be/aBzpvUXibw0?si=_kfago8HM5JOxdKt)
 
