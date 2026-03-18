@@ -18,117 +18,136 @@ public class Book : MonoBehaviour
 
     public void InitialState()
     {
-        for (int i=0; i<pages.Count; i++)
+        if (pages == null || pages.Count == 0)
         {
-            pages[i].transform.rotation=Quaternion.identity;
+            Debug.LogError("Pages list is empty.");
+            return;
         }
-        pages[0].SetAsLastSibling();
-        backButton.SetActive(false);
 
+        index = -1;
+        RefreshBookState();
+
+        if (backButton != null)
+            backButton.SetActive(false);
+
+        if (forwardButton != null)
+            forwardButton.SetActive(true);
     }
 
     public void RotateForward()
     {
-        if (rotate == true) { return; }
-        index++;
-        float angle = 180;
-        ForwardButtonActions();
-        pages[index].SetAsLastSibling();
-        StartCoroutine(Rotate(angle, true));
+        if (rotate) return;
+        if (index >= pages.Count - 1) return;
 
-    }
-
-    public void ForwardButtonActions()
-    {
-        if (backButton.activeInHierarchy == false)
-        {
-            backButton.SetActive(true);
-        }
-        if (index == pages.Count - 1)
-        {
-            forwardButton.SetActive(false);
-        }
+        int flipPageIndex = index + 1;
+        StartCoroutine(AnimateFlip(flipPageIndex, 180f, true));
     }
 
     public void RotateBack()
     {
-        if (rotate == true) { return; }
-        float angle = 0;
-        pages[index].SetAsLastSibling();
-        BackButtonActions();
-        StartCoroutine(Rotate(angle, false));
+        if (rotate) return;
+        if (index < 0) return;
+
+        int flipPageIndex = index;
+        StartCoroutine(AnimateFlip(flipPageIndex, 0f, false));
     }
 
-    public void BackButtonActions()
-    {
-        if (forwardButton.activeInHierarchy == false)
-        {
-            forwardButton.SetActive(true);
-        }
-        if (index - 1 == -1)
-        {
-            backButton.SetActive(false);
-        }
-    }
-
-IEnumerator Rotate(float angle, bool forward)
-{
-    float value = 0f;
-    bool swappedSide = false;
-
-    Transform front = pages[index].Find("FrontSide");
-    Transform back = pages[index].Find("BackSide");
-
-    if (front != null) front.gameObject.SetActive(true);
-    if (back != null) back.gameObject.SetActive(false);
-
-    while (true)
+    IEnumerator AnimateFlip(int pageIndex, float targetY, bool forward)
     {
         rotate = true;
-        Quaternion targetRotation = Quaternion.Euler(0, angle, 0);
-        value += Time.deltaTime * pageSpeed;
-        pages[index].rotation = Quaternion.Slerp(pages[index].rotation, targetRotation, value);
 
-        float currentY = pages[index].eulerAngles.y;
+        Transform page = pages[pageIndex];
 
-        if (!swappedSide)
+        page.SetAsLastSibling();
+
+        Quaternion startRotation = page.localRotation;
+        Quaternion targetRotation = Quaternion.Euler(0, targetY, 0);
+
+        float time = 0f;
+        bool swappedMidway = false;
+
+        while (time < 1f)
         {
-            if (forward && currentY > 90f && currentY < 270f)
+            time += Time.deltaTime * pageSpeed;
+            page.localRotation = Quaternion.Slerp(startRotation, targetRotation, time);
+
+            float y = page.localEulerAngles.y;
+
+            if (forward && !swappedMidway && y > 90f && y < 270f)
             {
-                if (front != null) front.gameObject.SetActive(false);
-                if (back != null) back.gameObject.SetActive(true);
-                swappedSide = true;
+                SetPageFrontVisible(page, false);
+                swappedMidway = true;
             }
-            else if (!forward && currentY < 90f)
-            {
-                if (front != null) front.gameObject.SetActive(true);
-                if (back != null) back.gameObject.SetActive(false);
-                swappedSide = true;
-            }
+
+            yield return null;
         }
 
-        float angle1 = Quaternion.Angle(pages[index].rotation, targetRotation);
-        if (angle1 < 0.1f)
-        {
-            pages[index].rotation = targetRotation;
+        page.localRotation = targetRotation;
 
-            if (forward)
+        if (forward)
+            index++;
+        else
+            index--;
+
+        RefreshBookState();
+        UpdateButtons();
+
+        rotate = false;
+    }
+
+    void RefreshBookState()
+    {
+        if (pages == null || pages.Count == 0) return;
+
+        for (int i = 0; i < pages.Count; i++)
+        {
+            if (i <= index)
             {
-                if (front != null) front.gameObject.SetActive(false);
-                if (back != null) back.gameObject.SetActive(true);
+                pages[i].localRotation = Quaternion.Euler(0, 180f, 0);
+                SetPageFrontVisible(pages[i], false);
             }
             else
             {
-                if (front != null) front.gameObject.SetActive(true);
-                if (back != null) back.gameObject.SetActive(false);
-                index--;
+                pages[i].localRotation = Quaternion.Euler(0, 0f, 0);
+                SetPageFrontVisible(pages[i], true);
             }
-
-            rotate = false;
-            break;
         }
 
-        yield return null;
+        int sibling = 0;
+
+        for (int i = 0; i <= index; i++)
+        {
+            if (i >= 0 && i < pages.Count)
+            {
+                pages[i].SetSiblingIndex(sibling);
+                sibling++;
+            }
+        }
+        for (int i = pages.Count - 1; i > index; i--)
+        {
+            pages[i].SetSiblingIndex(sibling);
+            sibling++;
+        }
     }
-}
+
+    void UpdateButtons()
+    {
+        if (backButton != null)
+            backButton.SetActive(index >= 0);
+
+        if (forwardButton != null)
+            forwardButton.SetActive(index < pages.Count - 1);
+    }
+
+    void SetPageFrontVisible(Transform page, bool showFront)
+    {
+        Transform front = page.Find("FrontSide");
+        Transform back = page.Find("BackSide");
+
+        if (front != null)
+            front.gameObject.SetActive(showFront);
+
+        if (back != null)
+            back.gameObject.SetActive(!showFront);
+    }
 }
