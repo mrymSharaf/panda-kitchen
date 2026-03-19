@@ -1,6 +1,8 @@
 # Panda Kitchen
 Welcome to the **Panda kitchen!** its a high-speed 3D restaurant management game where you play as a master Panda chef serving the stealthiest (and hungriest) customers in the world: **Ninjas**.
 
+[Play it here](https://mrymsharaf.itch.io/panda-kitchen)
+
 ## How to Play
 * **Seat the Customers:** Ninjas will enter and find a seat.
 * **Take Orders:** Walk up to a seated Ninja and press **[E]** when they are ready.
